@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Book, { IBook } from '../models/Book';
 
 // Fungsi untuk membuat buku baru
-export const createBook = async (req: Request, res: Response): Promise<void> => {
+const createBook = async (req: Request, res: Response): Promise<void> => {
   try {
     const { title, code, author, publishedDate } = req.body;
 
@@ -26,7 +26,7 @@ export const createBook = async (req: Request, res: Response): Promise<void> => 
 };
 
 // Fungsi untuk mendapatkan semua buku
-export const getBooks = async (req: Request, res: Response): Promise<void> => {
+const getBooks = async (req: Request, res: Response): Promise<void> => {
   try {
     const books = await Book.find();
     console.log('Success: Books fetched successfully');
@@ -39,7 +39,7 @@ export const getBooks = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Fungsi untuk mendapatkan detail buku berdasarkan ID
-export const getBookById = async (req: Request, res: Response): Promise<void> => {
+const getBookById = async (req: Request, res: Response): Promise<void> => {
   try {
     const book = await Book.findById(req.params.id);
     if (!book) {
@@ -57,7 +57,7 @@ export const getBookById = async (req: Request, res: Response): Promise<void> =>
 };
 
 // Fungsi untuk memperbarui buku berdasarkan ID
-export const updateBook = async (req: Request, res: Response): Promise<void> => {
+const updateBook = async (req: Request, res: Response): Promise<void> => {
   const { title, code, author, publishedDate } = req.body;
   try {
     const book = await Book.findByIdAndUpdate(
@@ -80,7 +80,7 @@ export const updateBook = async (req: Request, res: Response): Promise<void> => 
 };
 
 // Fungsi untuk menghapus buku berdasarkan ID
-export const deleteBook = async (req: Request, res: Response): Promise<void> => {
+const deleteBook = async (req: Request, res: Response): Promise<void> => {
   try {
     const book = await Book.findByIdAndDelete(req.params.id);
     if (!book) {
@@ -96,3 +96,17 @@ export const deleteBook = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ message: 'Failed to delete book', error: errorMessage });
   }
 };
+
+// Mengelompokkan semua fungsi dalam satu objek
+class BookController {
+  static async createBook(req: Request, res: Response) {
+      try {
+          const newBook = await Book.create(req.body);
+          return res.status(201).json(newBook);
+      } catch (error: any) {
+          return res.status(500).json({ message: error.message });
+      }
+  }
+}
+
+export default BookController;
